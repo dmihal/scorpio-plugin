@@ -1,0 +1,23 @@
+.avatar {
+  width: 30px;
+  height: 30px;
+  background-size: contain;
+}
+.name {
+  font-size: 16px;
+  color: #999999;
+  margin-left: 4px;
+}
+.statusBar {
+  display: inline-flex;
+  align-items: center;
+}
+.loginBtn {
+  background: #4267B2;
+  color: white;
+  font-size: 18px;
+  padding: 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 700;
+}

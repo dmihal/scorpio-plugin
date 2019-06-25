@@ -19,10 +19,12 @@ export default class LinksPlugin {
   }
 
   async checkStatus() {
-    const result = await fetch(`${this.identityServer}/status`);
+    const result = await fetch(`${this.identityServer}/status`, { credentials: 'include' });
     const json = await result.json();
     if (!json.authenticated) {
-      return this.setStatus({ user: null, friends: null });
+      this.setStatus({ user: null, friends: null });
+    } else {
+      this.setStatus({ user: json.user })
     }
   }
 
