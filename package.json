@@ -1,0 +1,11 @@
+{
+  "name": "scorpio-plugin",
+  "version": "0.0.1",
+  "description": "Plugin to support social media accounts in the Burner Wallet",
+  "main": "src/SorpioPlugin.js",
+  "author": "David Mihal <david@dmihal.com>",
+  "license": "MIT",
+  "dependencies": {
+    "deep-equal": "^1.0.1"
+  }
+}
