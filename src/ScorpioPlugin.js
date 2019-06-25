@@ -1,21 +1,42 @@
 import equal from 'deep-equal';
 import AccountStatus from './ui/AccountStatus';
 
-export default class LinksPlugin {
+export default class ScorpioPlugin {
   constructor(identityServer) {
     this.identityServer = identityServer;
     this._pluginContext = null;
     this.changeListeners = new Set();
     this.user = null;
     this.friends = null;
+    this.lastFetch = 0;
   }
 
   initializePlugin(pluginContext) {
     this._pluginContext = pluginContext;
 
     pluginContext.addElement('home-top', AccountStatus);
-    pluginContext.onAccountSearch(search => this.getFriends(search));
+    pluginContext.onAccountSearch(search => this.searchForFriends(search));
     this.checkStatus();
+  }
+
+  async getFriends() {
+    if (Date.now() - this.lastFetch < 15 * 1000) {
+      return this.friends;
+    }
+    const response = await fetch(`${this.identityServer}/friends`, { credentials: 'include' });
+    const { friends } = await response.json();
+    this.friends = friends;
+    this.lastFetch = Date.now();
+    return friends;
+  }
+
+  async searchForFriends(search) {
+    let friends = await this.getFriends();
+    if (search && search.length > 0) {
+      const regexSearch = new RegExp(`^${search}| ${search}`,'i');
+      friends = friends.filter(friend => regexSearch.test(friend.name));
+    }
+    return friends;
   }
 
   async checkStatus() {
@@ -55,6 +76,6 @@ export default class LinksPlugin {
   }
 
   removeChangeListener(listener) {
-    this.changeListeners.remove(listener);
+    this.changeListeners.delete(listener);
   }
 }
