@@ -22,6 +22,7 @@ export default class AccountStatus extends Component {
 
   render() {
     const { user } = this.state;
+    const redirectUrl = `${window.location.origin}/register-account`;
     return this.state.user ? (
       <div className={classes.statusBar}>
         <div className={classes.avatar} style={{ backgroundImage: `url(${user.picture})` }} />
@@ -30,7 +31,7 @@ export default class AccountStatus extends Component {
     ) : (
       <a
         className={classes.loginBtn}
-        href={`${this.plugin.identityServer}/auth?redirect=${encodeURIComponent(window.location.href)}`}
+        href={`${this.plugin.identityServer}/auth?redirect=${encodeURIComponent(redirectUrl)}`}
       >
         Log In with Facebook
       </a>

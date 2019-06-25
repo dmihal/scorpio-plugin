@@ -1,4 +1,5 @@
 import equal from 'deep-equal';
+import AccountRegisterPage from './ui/AccountRegisterPage';
 import AccountStatus from './ui/AccountStatus';
 
 export default class ScorpioPlugin {
@@ -14,9 +15,23 @@ export default class ScorpioPlugin {
   initializePlugin(pluginContext) {
     this._pluginContext = pluginContext;
 
+    pluginContext.addPage('/register-account', AccountRegisterPage);
     pluginContext.addElement('home-top', AccountStatus);
     pluginContext.onAccountSearch(search => this.searchForFriends(search));
     this.checkStatus();
+  }
+
+  async registerAddress(address) {
+    await this.checkStatus();
+    if (this.user && (!this.user.address || this.user.address.toLowerCase() !== address.toLowerCase())) {
+      await fetch(`${this.identityServer}/set_address`, {
+        method: 'post',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify({ address }),
+        credentials: 'include',
+      });
+      await this.checkStatus();
+    }
   }
 
   async getFriends() {
